@@ -1,60 +1,24 @@
-CREATE TABLE IF NOT EXISTS banco (
-	numero INTEGER NOT NULL,
+CREATE TABLE IF NOT EXISTS teste(
+	id SERIAL PRIMARY KEY,
 	nome VARCHAR(50) NOT NULL,
-	ativo BOOLEAN NOT NULL DEFAULT TRUE,
-	data_criacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY(numero)
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS agencia(
-	banco_numero INTEGER NOT NULL,
-	numero INTEGER NOT NULL,
-	nome VARCHAR(80) NOT NULL,
-	ativo BOOLEAN NOT NULL DEFAULT TRUE,
-	data_criacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY(banco_numero, numero),
-	FOREIGN KEY(banco_numero) REFERENCES banco(numero)
-);
+DROP TABLE IF EXISTS teste;
 
-CREATE TABLE cliente(
-	numero BIGSERIAL PRIMARY KEY,
-	nome VARCHAR(100) NOT NULL,
-	email VARCHAR(100) NOT NULL,
-	ativo BOOLEAN NOT NULL DEFAULT TRUE,
-	data_criacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE conta_corrente(
-	banco_numero INTEGER NOT NULL,
-	agencia_numero INTEGER NOT NULL,
-	cliente_numero BIGINT NOT NULL,
-	numero BIGINT NOT NULL,
-	digito SMALLINT NOT NULL,
-	ativo BOOLEAN NOT NULL DEFAULT TRUE,
-	data_criacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY(numero, digito, banco_numero, agencia_numero, cliente_numero),
-	FOREIGN KEY(banco_numero, agencia_numero) REFERENCES agencia(banco_numero, numero),
-	FOREIGN KEY(cliente_numero) REFERENCES cliente(numero)
-);
-
-CREATE TABLE tipo_transacao(
-	id SMALLSERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS teste(
+	cpf VARCHAR(11) NOT NULL,
 	nome VARCHAR(50) NOT NULL,
-	ativo BOOLEAN NOT NULL DEFAULT TRUE,
-	data_cricao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY(cpf)
 );
 
---DROP TABLE conta_corrente;
+INSERT INTO teste (cpf, nome)
+VALUES ('22344566712', 'Jose Carlos');
 
-CREATE TABLE cliente_transacoes(
-	id BIGSERIAL PRIMARY KEY,
-	banco_numero INTEGER NOT NULL,
-	agencia_numero INTEGER NOT NULL,
-	conta_corrente_numero BIGINT NOT NULL,
-	conta_corrente_digito SMALLINT NOT NULL,
-	cliente_numero BIGINT NOT NULL,
-	tipo_transacao_id SMALLINT NOT NULL,
-	valor NUMERIC(15,2) NOT NULL,
-	data_criacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY(banco_numero, agencia_numero, conta_corrente_numero, conta_corrente_digito, cliente_numero) REFERENCES conta_corrente(numero, digito, banco_numero, agencia_numero, cliente_numero)
-);
+INSERT INTO teste (cpf, nome)
+VALUES ('22344566712', 'Jose Carlos') ON CONFLICT (cpf) DO NOTHING;
+
+UPDATE teste SET nome = 'Pedro Alvares' WHERE cpf = '22344566712';
+
+SELECT * FROM teste;
